@@ -10,28 +10,13 @@ import java.nio.file.Paths;
 import com.example.web_server.core.http.utils.HttpRequestParser;
 
 public class HttpHandler {
-    private static SocketChannel clientChannel;
     private static final String INDEX_HTML_PATH = "src/main/resources/index.html";
     private static final String NOT_FOUND_HTML_PATH = "/error/404.html";
     private static final String ROOT_PATH = "src/main/resources";
-    private static HttpHandler instance;
 
-    private HttpHandler() {
-    }
-
-    public static HttpHandler getInstance() {
-        if (instance == null) {
-            instance = new HttpHandler();
-        }
-
-        return instance;
-    }
-
-    public static void handle(String request, SocketChannel clientChannel) {
+    public void handle(String request, SocketChannel clientChannel) {
         try {
             long start = System.currentTimeMillis();
-            HttpHandler.clientChannel = clientChannel;
-
             // Parse the HTTP request
             System.out.println("Received request" + request);
             HttpRequestParser parser = new HttpRequestParser();
@@ -40,7 +25,7 @@ public class HttpHandler {
             switch (httpRequest.getMethod()) {
                 case "GET":
                     System.out.println("Received GET request for " + httpRequest.getPath());
-                    handleGetRequest(httpRequest);
+                    handleGetRequest(httpRequest, clientChannel);
                     break;
                 case "POST":
                     System.out.println("Received POST request for " + httpRequest.getPath());
@@ -62,23 +47,24 @@ public class HttpHandler {
         throw new UnsupportedOperationException("Unimplemented method 'handlePostRequest'");
     }
 
-    private static void handleGetRequest(Http httpRequest) {
+    private static void handleGetRequest(Http httpRequest, SocketChannel clientChannel) {
         try {
-            sendFileAtPath(httpRequest.getPath());
+            sendFileAtPath(httpRequest.getPath(), clientChannel);
         } catch (IllegalStateException | IOException e) {
-            sendNotFoundHtml();
+            sendNotFoundHtml(clientChannel);
         }
     }
 
-    private static void sendNotFoundHtml() {
+    private static void sendNotFoundHtml(SocketChannel clientChannel) {
         try {
-            sendFileAtPath(NOT_FOUND_HTML_PATH);
+            sendFileAtPath(NOT_FOUND_HTML_PATH, clientChannel);
         } catch (IllegalStateException | IOException e) {
             e.printStackTrace();
         }
     }
 
-    private static void sendFileAtPath(String path) throws IllegalStateException, IOException {
+    private static void sendFileAtPath(String path, SocketChannel clientChannel)
+            throws IllegalStateException, IOException {
         if (clientChannel == null) {
             throw new IllegalStateException("Client channel is not set");
         }
