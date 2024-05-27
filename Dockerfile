@@ -9,7 +9,7 @@
 ################################################################################
 
 # Create a stage for resolving and downloading dependencies.
-FROM eclipse-temurin:21.0.3-jdk-jammy as deps
+FROM eclipse-temurin:22-jdk-jammy as deps
 
 WORKDIR /build
 
@@ -50,11 +50,11 @@ RUN --mount=type=bind,source=pom.xml,target=pom.xml \
 # from the install stage.
 #
 # The example below uses eclipse-turmin's JRE image as the foundation for running the app.
-# By specifying the "21.0.3-jre-jammy" tag, it will also use whatever happens to be the
+# By specifying the "22-jre-jammy" tag, it will also use whatever happens to be the
 # most recent version of that tag when you build your Dockerfile.
 # If reproducability is important, consider using a specific digest SHA, like
 # eclipse-temurin@sha256:99cede493dfd88720b610eb8077c8688d3cca50003d76d1d539b0efc8cca72b4.
-FROM eclipse-temurin:21.0.3-jre-jammy AS final
+FROM eclipse-temurin:22-jre-jammy AS final
 
 # Create a non-privileged user that the app will run under.
 # See https://docs.docker.com/go/dockerfile-user-best-practices/
