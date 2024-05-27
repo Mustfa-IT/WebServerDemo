@@ -1,11 +1,8 @@
 package com.example.web_server.core.http.utils;
 
 import com.example.web_server.core.http.Http;
-import org.apache.hc.core5.http.ParseException;
-import org.apache.hc.core5.http.message.BasicLineParser;
-import org.apache.hc.core5.util.CharArrayBuffer;
-import org.slf4j.*;
 
+import org.slf4j.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +26,6 @@ public class HttpRequestParser {
             String[] requestLineParts = lines[0].split("\\s+");
             String method = requestLineParts[0];
             String path = requestLineParts[1];
-            String protocol = requestLineParts[2];
 
             // Parse headers
             Map<String, String> headers = new HashMap<>();
