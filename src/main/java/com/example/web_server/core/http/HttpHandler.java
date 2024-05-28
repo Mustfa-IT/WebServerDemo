@@ -10,15 +10,16 @@ import java.nio.file.Paths;
 import com.example.web_server.core.http.utils.HttpRequestParser;
 
 public class HttpHandler {
-    private static final String INDEX_HTML_PATH = "src/main/resources/index.html";
+    private static final String INDEX_HTML_PATH = "/app/resources/index.html";
     private static final String NOT_FOUND_HTML_PATH = "/error/404.html";
-    private static final String ROOT_PATH = "src/main/resources";
+    private static final String ROOT_PATH = "/app/resources";
 
     public void handle(String request, SocketChannel clientChannel) {
         try {
             long start = System.currentTimeMillis();
             // Parse the HTTP request
             System.out.println("Received request" + request);
+            System.out.println();
             HttpRequestParser parser = new HttpRequestParser();
             Http httpRequest = parser.parse(request);
 
